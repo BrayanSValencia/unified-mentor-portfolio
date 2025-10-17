@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Portfolio: CRISP-DM Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .project-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .nav-link { position: relative; cursor: pointer; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background-color: #3b82f6; transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+        .active-nav::after { width: 100%; }
+        .section { scroll-margin-top: 80px; }
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .chart-container { background:white; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.05); padding:1.5rem; }
+        .crispdm-stage { border-left: 4px solid #3b82f6; padding-left:1rem; margin-bottom:2rem; }
+        .model-comparison { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:2rem; border-radius:12px; margin:2rem 0; }
+        /* New styles for interactive evaluation */
+        .animal-bar { cursor: pointer; transition: all 0.2s ease; }
+        .animal-bar:hover { opacity: 0.8; }
+        .animal-bar.active { border: 2px solid #3b82f6; }
+        .prediction-details { background-color: #f8fafc; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+        .animal-image { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; }
+        .animal-selector { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .animal-option { display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .animal-option:hover { background-color: #f1f5f9; }
+        .animal-option.selected { background-color: #dbeafe; border: 2px solid #3b82f6; }
+        .animal-icon { width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-bottom: 5px; }
+        /* Styles for other projects' interactive sections */
+        .cover-type-selector, .price-category-selector, .transaction-type-selector { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .cover-type-option, .price-category-option, .transaction-type-option { display: flex; flex-direction: column; align-items: center; padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .cover-type-option:hover, .price-category-option:hover, .transaction-type-option:hover { background-color: #f1f5f9; }
+        .cover-type-option.selected, .price-category-option.selected, .transaction-type-option.selected { background-color: #dbeafe; border: 2px solid #3b82f6; }
+        .cover-type-icon, .price-category-icon, .transaction-type-icon { width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-bottom: 5px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-600">Machine Learning Portfolio</h1>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="#overview" class="nav-link active-nav text-gray-700 font-medium">Overview</a></li>
+                    <li><a href="#animal-classification" class="nav-link text-gray-700 font-medium">Animal Classification</a></li>
+                    <li><a href="#forest-cover" class="nav-link text-gray-700 font-medium">Forest Cover</a></li>
+                    <li><a href="#mobile-pricing" class="nav-link text-gray-700 font-medium">Mobile Pricing</a></li>
+                    <li><a href="#fraud-detection" class="nav-link text-gray-700 font-medium">Fraud Detection</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Overview -->
+        <section id="overview" class="section mb-16 fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">CRISP-DM Machine Learning Projects</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">A collection of machine learning projects following the CRISP-DM methodology, showcasing different approaches to classification and prediction problems.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="project-card bg-white rounded-xl shadow-md overflow-hidden" onclick="scrollToSection('animal-classification')">
+                    <div class="h-2 bg-blue-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                                <span class="text-blue-600 font-bold">AC</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Animal Classification</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Classifying animal species.</p>
+                        <div class="flex justify-between text-sm text-gray-500"><span>Accuracy: 93.72%</span><span>15 Classes</span></div>
+                    </div>
+                </div>
+                <div class="project-card bg-white rounded-xl shadow-md overflow-hidden" onclick="scrollToSection('forest-cover')">
+                    <div class="h-2 bg-green-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
+                                <span class="text-green-600 font-bold">FC</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Forest Cover</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Predicting forest cover.</p>
+                        <div class="flex justify-between text-sm text-gray-500"><span>Accuracy: 84.52%</span><span>7 Classes</span></div>
+                    </div>
+                </div>
+                <div class="project-card bg-white rounded-xl shadow-md overflow-hidden" onclick="scrollToSection('mobile-pricing')">
+                    <div class="h-2 bg-purple-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+                                <span class="text-purple-600 font-bold">MP</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Mobile Pricing</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Predicting phone prices.</p>
+                        <div class="flex justify-between text-sm text-gray-500"><span>Accuracy: 96%</span><span>4 Classes</span></div>
+                    </div>
+                </div>
+                <div class="project-card bg-white rounded-xl shadow-md overflow-hidden" onclick="scrollToSection('fraud-detection')">
+                    <div class="h-2 bg-red-500"></div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mr-4">
+                                <span class="text-red-600 font-bold">FD</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Fraud Detection</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Detecting fraudulent transactions.</p>
+                        <div class="flex justify-between text-sm text-gray-500"><span>AUC: 97.4%</span><span>Binary</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Projects -->
+        <!-- Animal Classification -->
+        <section id="animal-classification" class="section mb-16 fade-in">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8 p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Animal Classification</h2>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-blue-600 mb-3">1. Business Understanding</h3><p class="text-gray-700 mb-2">Develop a model to classify 15 animal species from images.</p><p><strong>Success Metrics:</strong> Accuracy > 80%, all classes > 70% accuracy</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-blue-600 mb-3">2. Data Understanding</h3>
+                    <p class="text-gray-700">The dataset contains 1,944 labeled animal images across 15 species: Bear, Bird, Cat, Cow, Deer, Dog, Dolphin, Elephant, Giraffe, Horse, Kangaroo, Lion, Panda, Tiger, and Zebra. Images vary in resolution, lighting, and background. The dataset is split into training (1,400), validation (344), and test (200) sets. Class distribution is relatively balanced, with 85–95 images per class in the training set. The dataset was split with a fixed random seed (42) to ensure reproducibility</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div class="chart-container"><canvas id="animalDataSplit"></canvas></div>
+                        <div class="chart-container"><canvas id="animalClassDistribution"></canvas></div>
+                    </div>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-blue-600 mb-3">3. Data Preparation</h3>
+                    <p class="text-gray-700">All images were verified as valid JPEGs, checked for corruption, and resized to 224×224 pixels. Pixel values were normalized to [0, 1] by dividing by 255. Data augmentation—horizontal flips, ±10% rotation, ±10% zoom, and ±10% contrast—was applied only to the training set to reduce overfitting and improve generalization.
+</p>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-blue-600 mb-3">4. Modeling</h3><p class="text-gray-700">Four models tested: GAP, Flatten (scratch), VGG16 + Flatten, VGG16 + GAP.</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-blue-600 mb-3">5. Evaluation</h3>
+                    <div class="chart-container mb-6"><canvas id="animalModelComparison"></canvas></div>
+                    <!-- Interactive Animal Prediction Visualization -->
+                    <div class="chart-container mb-6">
+                        <h3 class="text-xl font-semibold text-blue-600 mb-4">Animal Prediction Distribution</h3>
+                        <p class="text-gray-600 mb-4">Select an animal to see how its images were classified across all categories</p>
+                        <!-- Animal Selector -->
+                        <div class="animal-selector mb-6">
+                            <!-- Animal options will be inserted here by JavaScript -->
+                        </div>
+                        <!-- Selected Animal Display -->
+                        <div id="selectedAnimalDisplay" class="flex items-center mb-6 p-4 bg-blue-50 rounded-lg hidden">
+                            <img id="selectedAnimalImage" src="" alt="Selected Animal" class="animal-image mr-4">
+                            <div>
+                                <h4 id="selectedAnimalName" class="text-xl font-bold text-gray-800"></h4>
+                                <p id="selectedAnimalStats" class="text-gray-600"></p>
+                            </div>
+                        </div>
+                        <!-- Prediction Chart -->
+                        <div class="mb-4">
+                            <canvas id="animalPredictionChart"></canvas>
+                        </div>
+                        <!-- Prediction Details -->
+                        <div id="predictionDetails" class="prediction-details">
+                            <h4 class="font-semibold text-lg mb-2" id="selectedAnimalTitle">Select an animal to see prediction details</h4>
+                            <div id="predictionBreakdown" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Prediction breakdown will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">Best model: VGG16 + Global Average Pooling 2D with 93.72% accuracy.</p>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="scrollToSection('overview')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">← Back to Overview</button>
+                    <button onclick="scrollToSection('forest-cover')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Next Project →</button>
+                </div>
+            </div>
+        </section>
+        <!-- Forest Cover -->
+        <section id="forest-cover" class="section mb-16 fade-in">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8 p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Forest Cover</h2>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-green-600 mb-3">1. Business Understanding</h3><p class="text-gray-700">Predict forest cover types based on cartographic variables.</p> </p><p><strong>Success Metrics:</strong> Accuracy > 80%, all classes > 70% accuracy</p></div></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-green-600 mb-3">2. Data Understanding</h3>
+                    <p class="text-gray-700">The dataset contains 15,120 observations with 54 features: 10 numerical (elevation, aspect, slope, distances, hillshades), 4 binary wilderness areas, and 40 binary soil types. The target variable is Cover_Type, with 7 forest classes (Spruce/Fir to Krummholz). Class distribution in training is nearly balanced (~1,500–1,515 samples per class). No missing values were found; training/test split was 10,584 / 4,536 (70/30) with seed 42, ensuring reproducible evaluation.
+</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div class="chart-container"><canvas id="forestDataSplit"></canvas></div>
+                        <div class="chart-container"><canvas id="forestClassDistribution"></canvas></div>
+                    </div>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-green-600 mb-3">3. Data Preparation</h3>
+                    <p class="text-gray-700">Redundant features (Hillshade_9am, Hillshade_3pm) and Vertical_Distance_To_Hydrology were removed to reduce multicollinearity while retaining  meaningful predictors. Numerical features were standardized using StandardScaler only for distance-based algorithms (SVM); tree-based models used raw values. Outliers in continuous features were capped using an IQR-based OutlierCapper (factor = 1.5). The dataset contained no missing values or duplicates, but a ClassImputer was included in the inference pipeline as a safeguard for potential missing data.</p>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-green-600 mb-3">4. Modeling</h3><p class="text-gray-700">Random Forest, Gradient Boosting, and SVM tested.</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-green-600 mb-3">5. Evaluation</h3>
+                    <div class="chart-container mb-6"><canvas id="forestModelComparison"></canvas></div>
+                    <!-- Interactive Forest Cover Prediction Visualization -->
+                    <div class="chart-container mb-6">
+                        <h3 class="text-xl font-semibold text-green-600 mb-4">Forest Cover Prediction Distribution (Initial Model)</h3>
+                        <p class="text-gray-600 mb-4">Select a forest cover type to see how its samples were classified across all categories</p>
+                        <!-- Forest Cover Type Selector -->
+                        <div class="cover-type-selector mb-6">
+                            <!-- Forest cover type options will be inserted here by JavaScript -->
+                        </div>
+                        <!-- Selected Cover Type Display -->
+                        <div id="selectedCoverTypeDisplay" class="flex items-center mb-6 p-4 bg-green-50 rounded-lg hidden">
+                            <img id="selectedCoverTypeImage" src="" alt="Selected Cover Type" class="animal-image mr-4">
+                            <div>
+                                <h4 id="selectedCoverTypeName" class="text-xl font-bold text-gray-800"></h4>
+                                <p id="selectedCoverTypeStats" class="text-gray-600"></p>
+                            </div>
+                        </div>
+                        <!-- Prediction Chart -->
+                        <div class="mb-4">
+                            <canvas id="forestCoverPredictionChart"></canvas>
+                        </div>
+                        <!-- Prediction Details -->
+                        <div id="forestPredictionDetails" class="prediction-details">
+                            <h4 class="font-semibold text-lg mb-2" id="selectedCoverTypeTitle">Select a forest cover type to see prediction details</h4>
+                            <div id="forestPredictionBreakdown" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Prediction breakdown will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+<!-- NEW: Model Refinement Explanation with UMAP Analysis -->
+<div class="mb-8 p-5 bg-blue-50 rounded-lg border border-blue-200">
+    <h3 class="text-xl font-semibold text-blue-700 mb-3">Addressing Class Confusion with Targeted One-vs-One Modeling</h3>
+    <p class="text-gray-700 mb-4">
+        Analysis of the initial model revealed significant confusion between specific forest cover types. 
+        To diagnose this, we visualized the feature space using <strong>UMAP</strong> and identified two problematic class pairs:
+    </p>
+    <ul class="list-disc list-inside text-gray-700 mb-4">
+        <li><strong>Class 1 vs Class 2</strong> (e.g., Spruce/Fir vs Lodgepole Pine): ~17% mutual confusion</li>
+        <li><strong>Class 3 vs Class 6</strong> (e.g., Ponderosa Pine vs Aspen): ~15% mutual confusion</li>
+    </ul>
+    <p class="text-gray-700 mb-4">
+        We implemented a <strong>One-vs-One Random Forest classifier</strong> for class 1 and class 2, trained only on their respective samples, 
+        and integrated their predictions into the final decision pipeline.
+    </p>
+    <div class="mt-4 flex justify-center">
+        <img src="umap.png" alt="UMAP visualization of forest cover class separability" class="rounded-lg shadow-md max-w-full h-auto">
+    </div>
+    <p class="text-sm text-gray-500 mt-2 text-center">UMAP projections showing class overlap (red = high confusion, green = well-separated)</p>
+</div>
+<!-- NEW: Second Forest Cover Prediction Visualization (After Model Refinement) -->
+<div class="chart-container mb-6">
+    <h3 class="text-xl font-semibold text-green-600 mb-4">Forest Cover Prediction Distribution (After Model Refinement)</h3>
+    <p class="text-gray-600 mb-4">Select a forest cover type to see how its samples were classified after model refinement</p>
+    <!-- Forest Cover Type Selector - Changed to horizontal layout -->
+    <div class="cover-type-selector-refined flex flex-row flex-wrap gap-10 mb-6">
+        <!-- Forest cover type options will be inserted here by JavaScript -->
+    </div>
+    <!-- Selected Cover Type Display -->
+    <div id="selectedCoverTypeDisplayRefined" class="flex items-center mb-6 p-4 bg-green-50 rounded-lg hidden">
+        <img id="selectedCoverTypeImageRefined" src="" alt="Selected Cover Type" class="animal-image mr-4">
+        <div>
+            <h4 id="selectedCoverTypeNameRefined" class="text-xl font-bold text-gray-800"></h4>
+            <p id="selectedCoverTypeStatsRefined" class="text-gray-600"></p>
+        </div>
+    </div>
+    <!-- Prediction Chart -->
+    <div class="mb-4">
+        <canvas id="forestCoverPredictionChartRefined"></canvas>
+    </div>
+    <!-- Prediction Details -->
+    <div id="forestPredictionDetailsRefined" class="prediction-details">
+        <h4 class="font-semibold text-lg mb-2" id="selectedCoverTypeTitleRefined">Select a forest cover type to see prediction details</h4>
+        <div id="forestPredictionBreakdownRefined" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Prediction breakdown will be inserted here -->
+        </div>
+    </div>
+</div>
+                    <p class="text-gray-700">Best model: Random Forest with 84% accuracy. After refinement, accuracy improved to 84.52%.</p>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="scrollToSection('animal-classification')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">← Previous Project</button>
+                    <button onclick="scrollToSection('mobile-pricing')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Next Project →</button>
+                </div>
+            </div>
+        </section>
+        <!-- Mobile Pricing -->
+        <section id="mobile-pricing" class="section mb-16 fade-in">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8 p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Mobile Pricing</h2>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-purple-600 mb-3">1. Business Understanding</h3><p class="text-gray-700">Predict the price category of mobile phones based on specifications.</p></p> </p><p><strong>Success Metrics:</strong> Accuracy > 80%, all classes > 70% accuracy</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-purple-600 mb-3">2. Data Understanding</h3>
+                    <p class="text-gray-700">The dataset contains 2,000 mobile phone records with 20 features including battery power, RAM, screen size, camera resolution, and more. The target variable has 4 ordinal price categories: Low, Medium, High, Very High. All features are numerical; no missing values were found.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div class="chart-container"><canvas id="mobileDataSplit"></canvas></div>
+                        <div class="chart-container"><canvas id="mobileClassDistribution"></canvas></div>
+                    </div>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-purple-600 mb-3">3. Data Preparation</h3>
+                    <p class="text-gray-700">We removed pc (primary camera) due to redundancy with fc (front camera) and sc_w (screen width) due to high correlation with sc_h (screen height) to reduce multicollinearity, preserving key predictors like ram, which correlates strongly (0.92) with the ordinal target price_range. Numerical features were standardized using StandardScaler for distance-based algorithms. Binary features required no encoding as they were already in numeric (0/1) form. Although the data had no missing values or duplicates, the pipeline includes an OutlierCapper (IQR factor = 1.5) and a ClassImputer for robustness during inference.
+</p>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-purple-600 mb-3">4. Modeling</h3><p class="text-gray-700">Neural Networks.</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-purple-600 mb-3">5. Evaluation</h3>
+                    <div class="chart-container mb-6"><canvas id="mobileModelPerformance"></canvas></div>
+                    <!-- Interactive Mobile Pricing Prediction Visualization -->
+                    <div class="chart-container mb-6">
+                        <h3 class="text-xl font-semibold text-purple-600 mb-4">Mobile Price Prediction Distribution</h3>
+                        <p class="text-gray-600 mb-4">Select a price category to see how its phones were classified across all categories</p>
+                        <!-- Price Category Selector -->
+                        <div class="price-category-selector mb-6">
+                            <!-- Price category options will be inserted here by JavaScript -->
+                        </div>
+                        <!-- Selected Price Category Display -->
+                        <div id="selectedPriceCategoryDisplay" class="flex items-center mb-6 p-4 bg-purple-50 rounded-lg hidden">
+                            <img id="selectedPriceCategoryImage" src="" alt="Selected Price Category" class="animal-image mr-4">
+                            <div>
+                                <h4 id="selectedPriceCategoryName" class="text-xl font-bold text-gray-800"></h4>
+                                <p id="selectedPriceCategoryStats" class="text-gray-600"></p>
+                            </div>
+                        </div>
+                        <!-- Prediction Chart -->
+                        <div class="mb-4">
+                            <canvas id="mobilePricePredictionChart"></canvas>
+                        </div>
+                        <!-- Prediction Details -->
+                        <div id="mobilePredictionDetails" class="prediction-details">
+                            <h4 class="font-semibold text-lg mb-2" id="selectedPriceCategoryTitle">Select a price category to see prediction details</h4>
+                            <div id="mobilePredictionBreakdown" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Prediction breakdown will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">Best model: Neural Network with 96% accuracy.</p>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="scrollToSection('forest-cover')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">← Previous Project</button>
+                    <button onclick="scrollToSection('fraud-detection')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Next Project →</button>
+                </div>
+            </div>
+        </section>
+        <!-- Fraud Detection -->
+        <section id="fraud-detection" class="section mb-16 fade-in">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8 p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Fraud Detection</h2>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-red-600 mb-3">1. Business Understanding</h3><p class="text-gray-700">Detect fraudulent transactions in banking datasets.</p> <p><strong>Success Metrics:</strong> Predict at least 80% of Non-Fraud records on a test set, Predict at least 90% of Fraud records on a test set</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-red-600 mb-3">2. Data Understanding</h3>
+                    <p class="text-gray-700">The dataset contains 1,754,154 transactions with 8 explicit features: TRANSACTION_ID, TX_DATETIME, CUSTOMER_ID, TERMINAL_ID, TX_AMOUNT, TX_TIME_SECONDS, TX_TIME_DAYS, and TX_FRAUD_SCENARIO (0–3). Fraud cases are extremely rare compared to fraud samples. No missing values.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div class="chart-container"><canvas id="fraudDataSplit"></canvas></div>
+                        <div class="chart-container"><canvas id="fraudClassDistribution"></canvas></div>
+                    </div>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-red-600 mb-3">3. Data Preparation</h3>
+   <p class="text-gray-700">
+  <p class="text-gray-700">
+  The dataset (0.17% fraud) was kept imbalanced to reflect real-world conditions—no SMOTE or resampling was used. Numerical features were standardized with <code>StandardScaler</code>, and the data was split 70/15/15 using time-based stratified sampling to preserve fraud dynamics. Outlier capping was skipped to retain rare fraud patterns; a median imputer was added for inference robustness despite no missing values in training.
+</p>
+
+<p class="text-gray-700 mt-4">
+  Redundant or non-predictive columns were removed: <code>TX_DATETIME</code>, <code>TX_TIME_DAYS</code> (duplicates of <code>TX_TIME_SECONDS</code>), <code>TX_FRAUD_SCENARIO</code>, and all ID fields (e.g., transaction/customer IDs), which offer no generalizable signal and risk leakage.
+</p>
+
+<p class="text-gray-700 mt-4">
+  Key engineered features:
+</p>
+<ul class="list-disc pl-5 text-gray-700 space-y-2">
+  <li>
+    <strong>terminal_fraud_ratio_7d:</strong> (frauds on this terminal in last 7 days) ÷ (total txs on this terminal in last 7 days).<br>
+    Shows the fraction of fraudulent transactions made at a terminal in the past 7 days. When a terminal is attacked, this ratio quickly rises close to 1 and stays high for about 28 days, so a value above 0.5 signals ongoing fraud activity.
+  </li>
+  <li>
+    <strong>customer_fraud_count_14d:</strong> Flags the 14-day leaked-customer window despite the 1-in-3 fraud sparsity.<br> 
+    If the count is ≥1 during the compromise period, the model simply checks whether count > 0 to detect that the customer is currently leaked.
+  </li>
+  <li>
+    <strong>z_amount_30d:</strong> Measures how unusual the current transaction amount is compared to the customer’s 30-day average (in standard deviations). <br>
+    A z-score above 3 means the amount is abnormally high—often about 5× the customer’s usual spending—and likely fraudulent.
+  </li>
+</ul>
+                </div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-red-600 mb-3">4. Modeling</h3><p class="text-gray-700">Logistic Regression and Neural Network compared .</p></div>
+                <div class="crispdm-stage"><h3 class="text-xl font-semibold text-red-600 mb-3">5. Evaluation</h3>
+                    <div class="chart-container mb-6"><canvas id="fraudModelPerformance"></canvas></div>
+                    <!-- Interactive Fraud Detection Prediction Visualization -->
+                    <div class="chart-container mb-6">
+                        <h3 class="text-xl font-semibold text-red-600 mb-4">Fraud Detection Prediction Distribution</h3>
+                        <p class="text-gray-600 mb-4">Select a transaction type to see how its samples were classified</p>
+                        <!-- Transaction Type Selector -->
+                        <div class="transaction-type-selector mb-6">
+                            <!-- Transaction type options will be inserted here by JavaScript -->
+                        </div>
+                        <!-- Selected Transaction Type Display -->
+                        <div id="selectedTransactionTypeDisplay" class="flex items-center mb-6 p-4 bg-red-50 rounded-lg hidden">
+                            <img id="selectedTransactionTypeImage" src="" alt="Selected Transaction Type" class="animal-image mr-4">
+                            <div>
+                                <h4 id="selectedTransactionTypeName" class="text-xl font-bold text-gray-800"></h4>
+                                <p id="selectedTransactionTypeStats" class="text-gray-600"></p>
+                            </div>
+                        </div>
+                        <!-- Prediction Chart -->
+                        <div class="mb-4">
+                            <canvas id="fraudDetectionPredictionChart"></canvas>
+                        </div>
+                        <!-- Prediction Details -->
+                        <div id="fraudPredictionDetails" class="prediction-details">
+                            <h4 class="font-semibold text-lg mb-2" id="selectedTransactionTypeTitle">Select a transaction type to see prediction details</h4>
+                            <div id="fraudPredictionBreakdown" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Prediction breakdown will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">Best model: Logistic Regression with 97.4% AUC.</p>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="scrollToSection('mobile-pricing')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">← Previous Project</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- JavaScript -->
+    <script>
+        const colors = {
+            blue: ['#3b82f6', '#60a5fa'],
+            green: ['#10b981', '#34d399'],
+            purple: ['#8b5cf6', '#a78bfa'],
+            red: ['#ef4444', '#f87171']
+        };
+        // Animal data with images and prediction counts
+        const animalData = {
+            'Bear': {
+                image: 'https://images.unsplash.com/photo-1568162603664-fcd658421851?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=781',
+                totalSamples: 13,
+                predictions: {
+                    'Bear': 13, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Bird': {
+                image: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=425',
+                totalSamples: 15,
+                predictions: {
+                    'Bear': 0, 'Bird': 15, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Cat': {
+                image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=500&q=60',
+                totalSamples: 12,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 12, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Cow': {
+                image: 'https://plus.unsplash.com/premium_photo-1668446123344-d7945fb07eaa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387',
+                totalSamples: 11,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 10, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 1, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Deer': {
+                image: 'https://plus.unsplash.com/premium_photo-1661819541230-034d07819c9b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=872',
+                totalSamples: 12,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 12,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Dog': {
+                image: 'https://plus.unsplash.com/premium_photo-1666777247416-ee7a95235559?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387',
+                totalSamples: 12,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 12, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Dolphin': {
+                image: 'https://images.unsplash.com/photo-1547382442-d17c21625a44?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387',
+                totalSamples: 14,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 14, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Elephant': {
+                image: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1032',
+                totalSamples: 14,
+                predictions: {
+                    'Bear': 1, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 13, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Giraffe': {
+                image: 'https://plus.unsplash.com/premium_photo-1661813434310-98cca4c9135e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=867',
+                totalSamples: 14,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 14,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Horse': {
+                image: 'https://images.unsplash.com/photo-1598974357801-cbca100e65d3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387',
+                totalSamples: 12,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 12, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Kangaroo': {
+                image: 'https://plus.unsplash.com/premium_photo-1666777247057-40fd5ff166c4?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387',
+                totalSamples: 13,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 1, 'Kangaroo': 12, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Lion': {
+                image: 'https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=486',
+                totalSamples: 14,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 14, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Panda': {
+                image: 'https://images.unsplash.com/photo-1527118732049-c88155f2107c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387',
+                totalSamples: 13,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 13,
+                    'Tiger': 0, 'Zebra': 0
+                }
+            },
+            'Tiger': {
+                image: 'https://plus.unsplash.com/premium_photo-1661847643150-4e06569d2ec1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=368',
+                totalSamples: 14,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 1,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 13, 'Zebra': 0
+                }
+            },
+            'Zebra': {
+                image: 'https://images.unsplash.com/photo-1501706362039-c06b2d715385?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=620',
+                totalSamples: 15,
+                predictions: {
+                    'Bear': 0, 'Bird': 0, 'Cat': 0, 'Cow': 0, 'Deer': 0,
+                    'Dog': 0, 'Dolphin': 0, 'Elephant': 0, 'Giraffe': 0,
+                    'Horse': 0, 'Kangaroo': 0, 'Lion': 0, 'Panda': 0,
+                    'Tiger': 0, 'Zebra': 15
+                }
+            }
+        };
+        // Forest Cover data (Initial Model)
+        const forestCoverData = {
+            'Spruce/Fir': {
+                image: 'https://images.unsplash.com/photo-1664880324139-bd7bc9aa5781?auto=format&fit=crop&q=80&w=387',
+                totalSamples: 620,
+                predictions: {
+                    'Spruce/Fir': 453,
+                    'Lodgepole Pine': 99,
+                    'Ponderosa Pine': 0,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 17,
+                    'Douglas-fir': 10,
+                    'Krummholz': 52
+                }
+            },
+            'Lodgepole Pine': {
+                image: 'https://plus.unsplash.com/premium_photo-1744980206107-52c105fad9d0?auto=format&fit=crop&q=80&w=387',
+                totalSamples: 658,
+                predictions: {
+                    'Spruce/Fir': 132,
+                    'Lodgepole Pine': 434,
+                    'Ponderosa Pine': 16,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 60,
+                    'Douglas-fir': 16,
+                    'Krummholz': 4
+                }
+            },
+            'Ponderosa Pine': {
+                image: 'https://images.unsplash.com/photo-1646156712264-1bd8c039ef6a?auto=format&fit=crop&q=80&w=870',
+                totalSamples: 645,
+                predictions: {
+                    'Spruce/Fir': 0,
+                    'Lodgepole Pine': 3,
+                    'Ponderosa Pine': 503,
+                    'Cottonwood/Willow': 31,
+                    'Aspen': 7,
+                    'Douglas-fir': 97,
+                    'Krummholz': 0
+                }
+            },
+            'Cottonwood/Willow': {
+                image: 'https://plus.unsplash.com/premium_photo-1675530789344-501b4546dee6?auto=format&fit=crop&q=80&w=387',
+                totalSamples: 661,
+                predictions: {
+                    'Spruce/Fir': 0,
+                    'Lodgepole Pine': 0,
+                    'Ponderosa Pine': 13,
+                    'Cottonwood/Willow': 641,
+                    'Aspen': 0,
+                    'Douglas-fir': 5,
+                    'Krummholz': 0
+                }
+            },
+            'Aspen': {
+                image: 'https://plus.unsplash.com/premium_photo-1694475677262-a143e76c85b8?auto=format&fit=crop&q=80&w=384',
+                totalSamples: 650,
+                predictions: {
+                    'Spruce/Fir': 3,
+                    'Lodgepole Pine': 19,
+                    'Ponderosa Pine': 14,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 611,
+                    'Douglas-fir': 3,
+                    'Krummholz': 0
+                }
+            },
+            'Douglas-fir': {
+                image: 'https://plus.unsplash.com/premium_photo-1733317253771-30430ce8e5e8?auto=format&fit=crop&q=80&w=868',
+                totalSamples: 650,
+                predictions: {
+                    'Spruce/Fir': 0,
+                    'Lodgepole Pine': 3,
+                    'Ponderosa Pine': 54,
+                    'Cottonwood/Willow': 32,
+                    'Aspen': 10,
+                    'Douglas-fir': 553,
+                    'Krummholz': 0
+                }
+            },
+            'Krummholz': {
+                image: 'https://plus.unsplash.com/premium_photo-1759044310047-e8b868a906a0?auto=format&fit=crop&q=80&w=435',
+                totalSamples: 652,
+                predictions: {
+                    'Spruce/Fir': 28,
+                    'Lodgepole Pine': 2,
+                    'Ponderosa Pine': 0,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 0,
+                    'Douglas-fir': 0,
+                    'Krummholz': 619
+                }
+            }
+        };
+        // NEW: Forest Cover data (After Model Refinement)
+        const forestCoverDataRefined = {
+            'Spruce/Fir': {
+                image: 'https://images.unsplash.com/photo-1664880324139-bd7bc9aa5781?auto=format&fit=crop&q=80&w=387',
+                totalSamples: 620,
+                predictions: {
+                    'Spruce/Fir': 440,
+                    'Lodgepole Pine': 105,
+                    'Ponderosa Pine': 0,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 17,
+                    'Douglas-fir': 10,
+                    'Krummholz': 52
+                }
+            },
+            'Lodgepole Pine': {
+                image: 'https://plus.unsplash.com/premium_photo-1744980206107-52c105fad9d0?auto=format&fit=crop&q=80&w=387',
+                totalSamples: 658,
+                predictions: {
+                    'Spruce/Fir': 105,
+                    'Lodgepole Pine': 461,
+                    'Ponderosa Pine': 16,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 60,
+                    'Douglas-fir': 16,
+                    'Krummholz': 4
+                }
+            },
+            'Ponderosa Pine': {
+                image: 'https://images.unsplash.com/photo-1646156712264-1bd8c039ef6a?auto=format&fit=crop&q=80&w=870',
+                totalSamples: 645,
+                predictions: {
+                    'Spruce/Fir': 0,
+                    'Lodgepole Pine': 3,
+                    'Ponderosa Pine': 503,
+                    'Cottonwood/Willow': 31,
+                    'Aspen': 7,
+                    'Douglas-fir': 97,
+                    'Krummholz': 0
+                }
+            },
+            'Cottonwood/Willow': {
+                image: 'https://plus.unsplash.com/premium_photo-1675530789344-501b4546dee6?auto=format&fit=crop&q=80&w=387',
+                totalSamples: 661,
+                predictions: {
+                    'Spruce/Fir': 0,
+                    'Lodgepole Pine': 0,
+                    'Ponderosa Pine': 13,
+                    'Cottonwood/Willow': 641,
+                    'Aspen': 0,
+                    'Douglas-fir': 5,
+                    'Krummholz': 0
+                }
+            },
+            'Aspen': {
+                image: 'https://plus.unsplash.com/premium_photo-1694475677262-a143e76c85b8?auto=format&fit=crop&q=80&w=384',
+                totalSamples: 650,
+                predictions: {
+                    'Spruce/Fir': 2,
+                    'Lodgepole Pine': 19,
+                    'Ponderosa Pine': 14,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 611,
+                    'Douglas-fir': 3,
+                    'Krummholz': 0
+                }
+            },
+            'Douglas-fir': {
+                image: 'https://plus.unsplash.com/premium_photo-1733317253771-30430ce8e5e8?auto=format&fit=crop&q=80&w=868',
+                totalSamples: 650,
+                predictions: {
+                    'Spruce/Fir': 0,
+                    'Lodgepole Pine': 3,
+                    'Ponderosa Pine': 54,
+                    'Cottonwood/Willow': 32,
+                    'Aspen': 10,
+                    'Douglas-fir': 553,
+                    'Krummholz': 0
+                }
+            },
+            'Krummholz': {
+                image: 'https://plus.unsplash.com/premium_photo-1759044310047-e8b868a906a0?auto=format&fit=crop&q=80&w=435',
+                totalSamples: 652,
+                predictions: {
+                    'Spruce/Fir': 29,
+                    'Lodgepole Pine': 1,
+                    'Ponderosa Pine': 0,
+                    'Cottonwood/Willow': 0,
+                    'Aspen': 0,
+                    'Douglas-fir': 0,
+                    'Krummholz': 622
+                }
+            }
+        };
+        // Mobile Pricing data — adjusted to reflect actual model performance
+        const mobilePricingData = {
+            'Low': {
+                image: 'https://plus.unsplash.com/premium_photo-1682310152051-5d6f901b19b8?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=912',
+                totalSamples: 80,
+                predictions: {
+                    'Low': Math.round(0.95 * 80),
+                    'Medium': Math.round(0.05 * 80),
+                    'High': 0,
+                    'Very High': 0
+                }
+            },
+            'Medium': {
+                image: 'https://plus.unsplash.com/premium_photo-1677692593965-28c886409cfb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=327',
+                totalSamples: 77,
+                predictions: {
+                    'Low': Math.round(0.013 * 77),
+                    'Medium': Math.round(0.99 * 77),
+                    'High': 0,
+                    'Very High': 0
+                }
+            },
+            'High': {
+                image: 'https://images.unsplash.com/photo-1692598504819-3c910911767f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=774',
+                totalSamples: 73,
+                predictions: {
+                    'Low': 0,
+                    'Medium': Math.round(0.041 * 73),
+                    'High': Math.round(0.96 * 73),
+                    'Very High': 0
+                }
+            },
+            'Very High': {
+                image: 'https://images.unsplash.com/photo-1634757439914-23b8acb9d411?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=688',
+                totalSamples: 70,
+                predictions: {
+                    'Low': 0,
+                    'Medium': 0,
+                    'High': Math.round(0.057 * 70),
+                    'Very High': Math.round(0.94 * 70),
+                }
+            }
+        };
+        // Fraud Detection data
+        const fraudDetectionData = {
+            'Non-Fraud': {
+                image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=871',
+                totalSamples: 260547,
+                predictions: {
+                    'Non-Fraud': 252731,
+                    'Fraud': 7035
+                }
+            },
+            'Fraud': {
+                image: 'https://images.unsplash.com/photo-1674049404913-2005c02245fa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=462',
+                totalSamples: 2576,
+                predictions: {
+                    'Non-Fraud': 237,
+                    'Fraud': 2344
+                }
+            }
+        };
+        const animalLabels = Object.keys(animalData);
+        const forestCoverLabels = Object.keys(forestCoverData);
+        const mobilePricingLabels = Object.keys(mobilePricingData);
+        const fraudDetectionLabels = Object.keys(fraudDetectionData);
+        let animalPredictionChart;
+        let forestCoverPredictionChart;
+        let forestCoverPredictionChartRefined;
+        let mobilePricePredictionChart;
+        let fraudDetectionPredictionChart;
+        let selectedAnimal = null;
+        let selectedCoverType = null;
+        let selectedCoverTypeRefined = null;
+        let selectedPriceCategory = null;
+        let selectedTransactionType = null;
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({behavior: 'smooth'});
+        }
+        function createBarChart(canvasId, labels, data, bgColor, title, yLabel) {
+            new Chart(document.getElementById(canvasId), {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: yLabel, data: data, backgroundColor: bgColor }] },
+                options: { 
+                    responsive: true, 
+                    plugins: { 
+                        legend: { display: false }, 
+                        title: { display: true, text: title },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value,
+                            color: '#000',
+                            font: { weight: 'bold' }
+                        }
+                    }, 
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            title: { display: true, text: yLabel }
+                        },
+                        x: { title: { display: true, text: 'Models' } }
+                    } 
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        function createPieChart(canvasId, labels, data, bgColors, title) {
+            new Chart(document.getElementById(canvasId), {
+                type: 'pie',
+                data: { labels: labels, datasets: [{ data: data, backgroundColor: bgColors }] },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: title },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                return ctx.chart.data.labels[ctx.dataIndex] + ': ' + value;
+                            },
+                            color: '#fff',
+                            font: { weight: 'bold' }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        // Animal Classification Functions
+        function createAnimalSelector() {
+            const selectorContainer = document.querySelector('.animal-selector');
+            animalLabels.forEach(animal => {
+                const animalOption = document.createElement('div');
+                animalOption.className = 'animal-option';
+                animalOption.dataset.animal = animal;
+                animalOption.innerHTML = `
+                    <img src="${animalData[animal].image}" alt="${animal}" class="animal-icon">
+                    <span class="text-sm font-medium">${animal}</span>
+                `;
+                animalOption.addEventListener('click', () => {
+                    selectAnimal(animal);
+                });
+                selectorContainer.appendChild(animalOption);
+            });
+        }
+        function createAnimalPredictionChart() {
+            const ctx = document.getElementById('animalPredictionChart').getContext('2d');
+            const totalSamples = animalLabels.map(animal => animalData[animal].totalSamples);
+            animalPredictionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: animalLabels,
+                    datasets: [{
+                        label: 'Total Samples',
+                        data: totalSamples,
+                        backgroundColor: animalLabels.map(animal => 
+                            selectedAnimal === animal ? '#1e40af' : colors.blue[0]
+                        ),
+                        borderColor: animalLabels.map(animal => 
+                            selectedAnimal === animal ? '#1e3a8a' : colors.blue[0]
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { 
+                            display: true, 
+                            text: 'Total Samples per Animal Class',
+                            font: { size: 16 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value,
+                            color: '#000',
+                            font: { weight: 'bold' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Total Samples: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { 
+                                display: true, 
+                                text: 'Number of Samples',
+                                font: { size: 14 }
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: 'Animal Classes',
+                                font: { size: 14 }
+                            }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const animal = animalLabels[index];
+                            selectAnimal(animal);
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        function selectAnimal(animal) {
+            selectedAnimal = animal;
+            document.querySelectorAll('.animal-option').forEach(option => {
+                if (option.dataset.animal === animal) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            const predictionData = animalLabels.map(label => 
+                animalData[animal].predictions[label]
+            );
+            animalPredictionChart.data.datasets[0].data = predictionData;
+            animalPredictionChart.data.datasets[0].label = `Predicted as ${animal}`;
+            animalPredictionChart.options.plugins.title.text = `Predictions for ${animal} Images`;
+            animalPredictionChart.options.scales.y.title.text = 'Number of Predictions';
+            animalPredictionChart.data.datasets[0].backgroundColor = animalLabels.map(label => 
+                label === animal ? '#10b981' : colors.blue[0]
+            );
+            animalPredictionChart.update();
+            showSelectedAnimalDisplay(animal);
+            showPredictionDetails(animal);
+        }
+        function showSelectedAnimalDisplay(animal) {
+            const displayContainer = document.getElementById('selectedAnimalDisplay');
+            const imageElement = document.getElementById('selectedAnimalImage');
+            const nameElement = document.getElementById('selectedAnimalName');
+            const statsElement = document.getElementById('selectedAnimalStats');
+            const data = animalData[animal];
+            const correctPredictions = data.predictions[animal];
+            const accuracy = ((correctPredictions / data.totalSamples) * 100).toFixed(1);
+            imageElement.src = data.image;
+            nameElement.textContent = animal;
+            statsElement.textContent = `${correctPredictions}/${data.totalSamples} correctly predicted (${accuracy}% accuracy)`;
+            displayContainer.classList.remove('hidden');
+        }
+        function showPredictionDetails(animal) {
+            const detailsContainer = document.getElementById('predictionDetails');
+            const titleElement = document.getElementById('selectedAnimalTitle');
+            const breakdownElement = document.getElementById('predictionBreakdown');
+            titleElement.textContent = `Prediction Details for ${animal}`;
+            breakdownElement.innerHTML = '';
+            const predictions = animalData[animal].predictions;
+            const total = animalData[animal].totalSamples;
+            animalLabels.forEach(label => {
+                const count = predictions[label];
+                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                const breakdownItem = document.createElement('div');
+                breakdownItem.className = 'flex justify-between items-center p-3 bg-white rounded-lg shadow-sm';
+                if (label === animal) {
+                    breakdownItem.classList.add('bg-green-50', 'border', 'border-green-200');
+                }
+                breakdownItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-medium ${label === animal ? 'text-green-700' : 'text-gray-700'}">${label}</span>
+                        ${label === animal ? '<span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Correct</span>' : ''}
+                    </div>
+                    <div class="flex items-center">
+                        <span class="mr-2 font-semibold">${count}/${total}</span>
+                        <span class="text-sm text-gray-500">(${percentage}%)</span>
+                    </div>
+                `;
+                breakdownElement.appendChild(breakdownItem);
+            });
+            detailsContainer.classList.remove('hidden');
+        }
+        // Forest Cover Functions (Initial Model)
+        function createForestCoverSelector() {
+            const selectorContainer = document.querySelector('.cover-type-selector');
+            forestCoverLabels.forEach(coverType => {
+                const coverTypeOption = document.createElement('div');
+                coverTypeOption.className = 'cover-type-option';
+                coverTypeOption.dataset.coverType = coverType;
+                coverTypeOption.innerHTML = `
+                    <img src="${forestCoverData[coverType].image}" alt="${coverType}" class="cover-type-icon">
+                    <span class="text-sm font-medium">${coverType}</span>
+                `;
+                coverTypeOption.addEventListener('click', () => {
+                    selectCoverType(coverType);
+                });
+                selectorContainer.appendChild(coverTypeOption);
+            });
+        }
+        function createForestCoverPredictionChart() {
+            const ctx = document.getElementById('forestCoverPredictionChart').getContext('2d');
+            const totalSamples = forestCoverLabels.map(coverType => forestCoverData[coverType].totalSamples);
+            forestCoverPredictionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: forestCoverLabels,
+                    datasets: [{
+                        label: 'Total Samples',
+                        data: totalSamples,
+                        backgroundColor: forestCoverLabels.map(coverType => 
+                            selectedCoverType === coverType ? '#059669' : colors.green[0]
+                        ),
+                        borderColor: forestCoverLabels.map(coverType => 
+                            selectedCoverType === coverType ? '#047857' : colors.green[0]
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { 
+                            display: true, 
+                            text: 'Total Samples per Forest Cover Type',
+                            font: { size: 16 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value,
+                            color: '#000',
+                            font: { weight: 'bold' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Total Samples: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { 
+                                display: true, 
+                                text: 'Number of Samples',
+                                font: { size: 14 }
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: 'Forest Cover Types',
+                                font: { size: 14 }
+                            }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const coverType = forestCoverLabels[index];
+                            selectCoverType(coverType);
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        function selectCoverType(coverType) {
+            selectedCoverType = coverType;
+            document.querySelectorAll('.cover-type-option').forEach(option => {
+                if (option.dataset.coverType === coverType) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            const predictionData = forestCoverLabels.map(label => 
+                forestCoverData[coverType].predictions[label]
+            );
+            forestCoverPredictionChart.data.datasets[0].data = predictionData;
+            forestCoverPredictionChart.data.datasets[0].label = `Predicted as ${coverType}`;
+            forestCoverPredictionChart.options.plugins.title.text = `Predictions for ${coverType} Samples`;
+            forestCoverPredictionChart.options.scales.y.title.text = 'Number of Predictions';
+            forestCoverPredictionChart.data.datasets[0].backgroundColor = forestCoverLabels.map(label => 
+                label === coverType ? '#059669' : colors.green[0]
+            );
+            forestCoverPredictionChart.update();
+            showSelectedCoverTypeDisplay(coverType);
+            showForestPredictionDetails(coverType);
+        }
+        function showSelectedCoverTypeDisplay(coverType) {
+            const displayContainer = document.getElementById('selectedCoverTypeDisplay');
+            const imageElement = document.getElementById('selectedCoverTypeImage');
+            const nameElement = document.getElementById('selectedCoverTypeName');
+            const statsElement = document.getElementById('selectedCoverTypeStats');
+            const data = forestCoverData[coverType];
+            const correctPredictions = data.predictions[coverType];
+            const accuracy = ((correctPredictions / data.totalSamples) * 100).toFixed(1);
+            imageElement.src = data.image;
+            nameElement.textContent = coverType;
+            statsElement.textContent = `${correctPredictions}/${data.totalSamples} correctly predicted (${accuracy}% accuracy)`;
+            displayContainer.classList.remove('hidden');
+        }
+        function showForestPredictionDetails(coverType) {
+            const detailsContainer = document.getElementById('forestPredictionDetails');
+            const titleElement = document.getElementById('selectedCoverTypeTitle');
+            const breakdownElement = document.getElementById('forestPredictionBreakdown');
+            titleElement.textContent = `Prediction Details for ${coverType}`;
+            breakdownElement.innerHTML = '';
+            const predictions = forestCoverData[coverType].predictions;
+            const total = forestCoverData[coverType].totalSamples;
+            forestCoverLabels.forEach(label => {
+                const count = predictions[label];
+                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                const breakdownItem = document.createElement('div');
+                breakdownItem.className = 'flex justify-between items-center p-3 bg-white rounded-lg shadow-sm';
+                if (label === coverType) {
+                    breakdownItem.classList.add('bg-green-50', 'border', 'border-green-200');
+                }
+                breakdownItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-medium ${label === coverType ? 'text-green-700' : 'text-gray-700'}">${label}</span>
+                        ${label === coverType ? '<span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Correct</span>' : ''}
+                    </div>
+                    <div class="flex items-center">
+                        <span class="mr-2 font-semibold">${count}/${total}</span>
+                        <span class="text-sm text-gray-500">(${percentage}%)</span>
+                    </div>
+                `;
+                breakdownElement.appendChild(breakdownItem);
+            });
+            detailsContainer.classList.remove('hidden');
+        }
+        // NEW: Forest Cover Functions (After Model Refinement)
+        function createForestCoverSelectorRefined() {
+            const selectorContainer = document.querySelector('.cover-type-selector-refined');
+            forestCoverLabels.forEach(coverType => {
+                const coverTypeOption = document.createElement('div');
+                coverTypeOption.className = 'cover-type-option';
+                coverTypeOption.dataset.coverType = coverType;
+                coverTypeOption.innerHTML = `
+                    <img src="${forestCoverDataRefined[coverType].image}" alt="${coverType}" class="cover-type-icon">
+                    <span class="text-sm font-medium">${coverType}</span>
+                `;
+                coverTypeOption.addEventListener('click', () => {
+                    selectCoverTypeRefined(coverType);
+                });
+                selectorContainer.appendChild(coverTypeOption);
+            });
+        }
+        function createForestCoverPredictionChartRefined() {
+            const ctx = document.getElementById('forestCoverPredictionChartRefined').getContext('2d');
+            const totalSamples = forestCoverLabels.map(coverType => forestCoverDataRefined[coverType].totalSamples);
+            forestCoverPredictionChartRefined = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: forestCoverLabels,
+                    datasets: [{
+                        label: 'Total Samples',
+                        data: totalSamples,
+                        backgroundColor: forestCoverLabels.map(coverType => 
+                            selectedCoverTypeRefined === coverType ? '#059669' : colors.green[0]
+                        ),
+                        borderColor: forestCoverLabels.map(coverType => 
+                            selectedCoverTypeRefined === coverType ? '#047857' : colors.green[0]
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { 
+                            display: true, 
+                            text: 'Total Samples per Forest Cover Type',
+                            font: { size: 16 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value,
+                            color: '#000',
+                            font: { weight: 'bold' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Total Samples: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { 
+                                display: true, 
+                                text: 'Number of Samples',
+                                font: { size: 14 }
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: 'Forest Cover Types',
+                                font: { size: 14 }
+                            }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const coverType = forestCoverLabels[index];
+                            selectCoverTypeRefined(coverType);
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        function selectCoverTypeRefined(coverType) {
+            selectedCoverTypeRefined = coverType;
+            document.querySelectorAll('.cover-type-selector-refined .cover-type-option').forEach(option => {
+                if (option.dataset.coverType === coverType) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            const predictionData = forestCoverLabels.map(label => 
+                forestCoverDataRefined[coverType].predictions[label]
+            );
+            forestCoverPredictionChartRefined.data.datasets[0].data = predictionData;
+            forestCoverPredictionChartRefined.data.datasets[0].label = `Predicted as ${coverType}`;
+            forestCoverPredictionChartRefined.options.plugins.title.text = `Predictions for ${coverType} Samples (After Refinement)`;
+            forestCoverPredictionChartRefined.options.scales.y.title.text = 'Number of Predictions';
+            forestCoverPredictionChartRefined.data.datasets[0].backgroundColor = forestCoverLabels.map(label => 
+                label === coverType ? '#059669' : colors.green[0]
+            );
+            forestCoverPredictionChartRefined.update();
+            showSelectedCoverTypeDisplayRefined(coverType);
+            showForestPredictionDetailsRefined(coverType);
+        }
+        function showSelectedCoverTypeDisplayRefined(coverType) {
+            const displayContainer = document.getElementById('selectedCoverTypeDisplayRefined');
+            const imageElement = document.getElementById('selectedCoverTypeImageRefined');
+            const nameElement = document.getElementById('selectedCoverTypeNameRefined');
+            const statsElement = document.getElementById('selectedCoverTypeStatsRefined');
+            const data = forestCoverDataRefined[coverType];
+            const correctPredictions = data.predictions[coverType];
+            const accuracy = ((correctPredictions / data.totalSamples) * 100).toFixed(1);
+            imageElement.src = data.image;
+            nameElement.textContent = coverType;
+            statsElement.textContent = `${correctPredictions}/${data.totalSamples} correctly predicted (${accuracy}% accuracy)`;
+            displayContainer.classList.remove('hidden');
+        }
+        function showForestPredictionDetailsRefined(coverType) {
+            const detailsContainer = document.getElementById('forestPredictionDetailsRefined');
+            const titleElement = document.getElementById('selectedCoverTypeTitleRefined');
+            const breakdownElement = document.getElementById('forestPredictionBreakdownRefined');
+            titleElement.textContent = `Prediction Details for ${coverType} (After Refinement)`;
+            breakdownElement.innerHTML = '';
+            const predictions = forestCoverDataRefined[coverType].predictions;
+            const total = forestCoverDataRefined[coverType].totalSamples;
+            forestCoverLabels.forEach(label => {
+                const count = predictions[label];
+                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                const breakdownItem = document.createElement('div');
+                breakdownItem.className = 'flex justify-between items-center p-3 bg-white rounded-lg shadow-sm';
+                if (label === coverType) {
+                    breakdownItem.classList.add('bg-green-50', 'border', 'border-green-200');
+                }
+                breakdownItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-medium ${label === coverType ? 'text-green-700' : 'text-gray-700'}">${label}</span>
+                        ${label === coverType ? '<span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Correct</span>' : ''}
+                    </div>
+                    <div class="flex items-center">
+                        <span class="mr-2 font-semibold">${count}/${total}</span>
+                        <span class="text-sm text-gray-500">(${percentage}%)</span>
+                    </div>
+                `;
+                breakdownElement.appendChild(breakdownItem);
+            });
+            detailsContainer.classList.remove('hidden');
+        }
+        // Mobile Pricing Functions
+        function createMobilePricingSelector() {
+            const selectorContainer = document.querySelector('.price-category-selector');
+            mobilePricingLabels.forEach(category => {
+                const categoryOption = document.createElement('div');
+                categoryOption.className = 'price-category-option';
+                categoryOption.dataset.category = category;
+                categoryOption.innerHTML = `
+                    <img src="${mobilePricingData[category].image}" alt="${category}" class="price-category-icon">
+                    <span class="text-sm font-medium">${category}</span>
+                `;
+                categoryOption.addEventListener('click', () => {
+                    selectPriceCategory(category);
+                });
+                selectorContainer.appendChild(categoryOption);
+            });
+        }
+        function createMobilePricePredictionChart() {
+            const ctx = document.getElementById('mobilePricePredictionChart').getContext('2d');
+            const totalSamples = mobilePricingLabels.map(category => mobilePricingData[category].totalSamples);
+            mobilePricePredictionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: mobilePricingLabels,
+                    datasets: [{
+                        label: 'Total Samples',
+                        data: totalSamples,
+                        backgroundColor: mobilePricingLabels.map(category => 
+                            selectedPriceCategory === category ? '#7c3aed' : colors.purple[0]
+                        ),
+                        borderColor: mobilePricingLabels.map(category => 
+                            selectedPriceCategory === category ? '#6d28d9' : colors.purple[0]
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { 
+                            display: true, 
+                            text: 'Total Samples per Price Category',
+                            font: { size: 16 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value,
+                            color: '#000',
+                            font: { weight: 'bold' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Total Samples: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { 
+                                display: true, 
+                                text: 'Number of Samples',
+                                font: { size: 14 }
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: 'Price Categories',
+                                font: { size: 14 }
+                            }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const category = mobilePricingLabels[index];
+                            selectPriceCategory(category);
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        function selectPriceCategory(category) {
+            selectedPriceCategory = category;
+            document.querySelectorAll('.price-category-option').forEach(option => {
+                if (option.dataset.category === category) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            const predictionData = mobilePricingLabels.map(label => 
+                mobilePricingData[category].predictions[label]
+            );
+            mobilePricePredictionChart.data.datasets[0].data = predictionData;
+            mobilePricePredictionChart.data.datasets[0].label = `Predicted as ${category}`;
+            mobilePricePredictionChart.options.plugins.title.text = `Predictions for ${category} Phones`;
+            mobilePricePredictionChart.options.scales.y.title.text = 'Number of Predictions';
+            mobilePricePredictionChart.data.datasets[0].backgroundColor = mobilePricingLabels.map(label => 
+                label === category ? '#7c3aed' : colors.purple[0]
+            );
+            mobilePricePredictionChart.update();
+            showSelectedPriceCategoryDisplay(category);
+            showMobilePredictionDetails(category);
+        }
+        function showSelectedPriceCategoryDisplay(category) {
+            const displayContainer = document.getElementById('selectedPriceCategoryDisplay');
+            const imageElement = document.getElementById('selectedPriceCategoryImage');
+            const nameElement = document.getElementById('selectedPriceCategoryName');
+            const statsElement = document.getElementById('selectedPriceCategoryStats');
+            const data = mobilePricingData[category];
+            const correctPredictions = data.predictions[category];
+            const accuracy = ((correctPredictions / data.totalSamples) * 100).toFixed(1);
+            imageElement.src = data.image;
+            nameElement.textContent = category;
+            statsElement.textContent = `${correctPredictions}/${data.totalSamples} correctly predicted (${accuracy}% accuracy)`;
+            displayContainer.classList.remove('hidden');
+        }
+        function showMobilePredictionDetails(category) {
+            const detailsContainer = document.getElementById('mobilePredictionDetails');
+            const titleElement = document.getElementById('selectedPriceCategoryTitle');
+            const breakdownElement = document.getElementById('mobilePredictionBreakdown');
+            titleElement.textContent = `Prediction Details for ${category}`;
+            breakdownElement.innerHTML = '';
+            const predictions = mobilePricingData[category].predictions;
+            const total = mobilePricingData[category].totalSamples;
+            mobilePricingLabels.forEach(label => {
+                const count = predictions[label];
+                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                const breakdownItem = document.createElement('div');
+                breakdownItem.className = 'flex justify-between items-center p-3 bg-white rounded-lg shadow-sm';
+                if (label === category) {
+                    breakdownItem.classList.add('bg-purple-50', 'border', 'border-purple-200');
+                }
+                breakdownItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-medium ${label === category ? 'text-purple-700' : 'text-gray-700'}">${label}</span>
+                        ${label === category ? '<span class="ml-2 text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Correct</span>' : ''}
+                    </div>
+                    <div class="flex items-center">
+                        <span class="mr-2 font-semibold">${count}/${total}</span>
+                        <span class="text-sm text-gray-500">(${percentage}%)</span>
+                    </div>
+                `;
+                breakdownElement.appendChild(breakdownItem);
+            });
+            detailsContainer.classList.remove('hidden');
+        }
+        // Fraud Detection Functions
+        function createFraudDetectionSelector() {
+            const selectorContainer = document.querySelector('.transaction-type-selector');
+            fraudDetectionLabels.forEach(transactionType => {
+                const transactionTypeOption = document.createElement('div');
+                transactionTypeOption.className = 'transaction-type-option';
+                transactionTypeOption.dataset.transactionType = transactionType;
+                transactionTypeOption.innerHTML = `
+                    <img src="${fraudDetectionData[transactionType].image}" alt="${transactionType}" class="transaction-type-icon">
+                    <span class="text-sm font-medium">${transactionType}</span>
+                `;
+                transactionTypeOption.addEventListener('click', () => {
+                    selectTransactionType(transactionType);
+                });
+                selectorContainer.appendChild(transactionTypeOption);
+            });
+        }
+        function createFraudDetectionPredictionChart() {
+            const ctx = document.getElementById('fraudDetectionPredictionChart').getContext('2d');
+            const totalSamples = fraudDetectionLabels.map(transactionType => fraudDetectionData[transactionType].totalSamples);
+            fraudDetectionPredictionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: fraudDetectionLabels,
+                    datasets: [{
+                        label: 'Total Samples',
+                        data: totalSamples,
+                        backgroundColor: fraudDetectionLabels.map(transactionType => 
+                            selectedTransactionType === transactionType ? '#dc2626' : colors.red[0]
+                        ),
+                        borderColor: fraudDetectionLabels.map(transactionType => 
+                            selectedTransactionType === transactionType ? '#b91c1c' : colors.red[0]
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { 
+                            display: true, 
+                            text: 'Total Samples per Transaction Type',
+                            font: { size: 16 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value) => value,
+                            color: '#000',
+                            font: { weight: 'bold' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Total Samples: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { 
+                                display: true, 
+                                text: 'Number of Samples',
+                                font: { size: 14 }
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: 'Transaction Types',
+                                font: { size: 14 }
+                            }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const transactionType = fraudDetectionLabels[index];
+                            selectTransactionType(transactionType);
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+        function selectTransactionType(transactionType) {
+            selectedTransactionType = transactionType;
+            document.querySelectorAll('.transaction-type-option').forEach(option => {
+                if (option.dataset.transactionType === transactionType) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            const predictionData = fraudDetectionLabels.map(label => 
+                fraudDetectionData[transactionType].predictions[label]
+            );
+            fraudDetectionPredictionChart.data.datasets[0].data = predictionData;
+            fraudDetectionPredictionChart.data.datasets[0].label = `Predicted as ${transactionType}`;
+            fraudDetectionPredictionChart.options.plugins.title.text = `Predictions for ${transactionType} Transactions`;
+            fraudDetectionPredictionChart.options.scales.y.title.text = 'Number of Predictions';
+            fraudDetectionPredictionChart.data.datasets[0].backgroundColor = fraudDetectionLabels.map(label => 
+                label === transactionType ? '#dc2626' : colors.red[0]
+            );
+            fraudDetectionPredictionChart.update();
+            showSelectedTransactionTypeDisplay(transactionType);
+            showFraudPredictionDetails(transactionType);
+        }
+        function showSelectedTransactionTypeDisplay(transactionType) {
+            const displayContainer = document.getElementById('selectedTransactionTypeDisplay');
+            const imageElement = document.getElementById('selectedTransactionTypeImage');
+            const nameElement = document.getElementById('selectedTransactionTypeName');
+            const statsElement = document.getElementById('selectedTransactionTypeStats');
+            const data = fraudDetectionData[transactionType];
+            const correctPredictions = data.predictions[transactionType];
+            const accuracy = ((correctPredictions / data.totalSamples) * 100).toFixed(1);
+            imageElement.src = data.image;
+            nameElement.textContent = transactionType;
+            statsElement.textContent = `${correctPredictions}/${data.totalSamples} correctly predicted (${accuracy}% accuracy)`;
+            displayContainer.classList.remove('hidden');
+        }
+        function showFraudPredictionDetails(transactionType) {
+            const detailsContainer = document.getElementById('fraudPredictionDetails');
+            const titleElement = document.getElementById('selectedTransactionTypeTitle');
+            const breakdownElement = document.getElementById('fraudPredictionBreakdown');
+            titleElement.textContent = `Prediction Details for ${transactionType}`;
+            breakdownElement.innerHTML = '';
+            const predictions = fraudDetectionData[transactionType].predictions;
+            const total = fraudDetectionData[transactionType].totalSamples;
+            fraudDetectionLabels.forEach(label => {
+                const count = predictions[label];
+                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                const breakdownItem = document.createElement('div');
+                breakdownItem.className = 'flex justify-between items-center p-3 bg-white rounded-lg shadow-sm';
+                if (label === transactionType) {
+                    breakdownItem.classList.add('bg-red-50', 'border', 'border-red-200');
+                }
+                breakdownItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-medium ${label === transactionType ? 'text-red-700' : 'text-gray-700'}">${label}</span>
+                        ${label === transactionType ? '<span class="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Correct</span>' : ''}
+                    </div>
+                    <div class="flex items-center">
+                        <span class="mr-2 font-semibold">${count}/${total}</span>
+                        <span class="text-sm text-gray-500">(${percentage}%)</span>
+                    </div>
+                `;
+                breakdownElement.appendChild(breakdownItem);
+            });
+            detailsContainer.classList.remove('hidden');
+        }
+        function initializeCharts() {
+            // Animal Classification
+            createPieChart('animalDataSplit', ['Training', 'Validation', 'Test'], [1400, 344, 200], [colors.blue[0], colors.blue[1], '#93c5fd'], 'Dataset Split');
+            createBarChart('animalClassDistribution', ['Bear', 'Bird', 'Cat', 'Cow', 'Deer', 'Dog', 'Dolphin', 'Elephant', 'Giraffe', 'Horse', 'Kangaroo', 'Lion', 'Panda', 'Tiger', 'Zebra'], [87.0, 95.0, 86.0, 91.0, 88.0, 85.0, 90.0, 93.0, 90.0, 91.0, 88.0, 91.0, 94.0, 90.0, 95.0], colors.blue[0], 'Class Distribution Training', '# of Images');
+            createBarChart('animalModelComparison', ['GAP', 'Flatten', 'VGG16+Flatten', 'VGG16+GAP'], [24.64, 56.04, 91.30, 93.72], colors.blue[0], 'Model Accuracy Comparison', 'Accuracy (%)');
+            // Create interactive evaluation components for Animal Classification
+            createAnimalSelector();
+            createAnimalPredictionChart();
+            selectAnimal(animalLabels[0]);
+            // Forest Cover
+            createPieChart('forestDataSplit', ['Training', 'Test'], [10584, 4536], [colors.green[0], colors.green[1]], 'Dataset Split');
+            createBarChart('forestClassDistribution', ['Spruce/Fir', 'Lodgepole Pine', 'Ponderosa Pine', 'Cottonwood/Willow', 'Aspen', 'Douglas-fir', 'Krummholz'], [1540, 1502, 1515, 1499, 1510, 1510, 1508], colors.green[0], 'Class Distribution Training', '# Samples');
+            createBarChart('forestModelComparison', ['Random Forest', 'Gradient Boosting', 'SVM'], [84, 81.86, 77.1], colors.green[0], 'Model Accuracy Comparison', 'Accuracy (%)');
+            // Create interactive evaluation components for Forest Cover (Initial Model)
+            createForestCoverSelector();
+            createForestCoverPredictionChart();
+            selectCoverType(forestCoverLabels[0]);
+            // NEW: Create interactive evaluation components for Forest Cover (After Model Refinement)
+            createForestCoverSelectorRefined();
+            createForestCoverPredictionChartRefined();
+            selectCoverTypeRefined(forestCoverLabels[0]);
+            // Mobile Pricing
+            createPieChart('mobileDataSplit', ['Training', 'Test'], [1600, 400], [colors.purple[0], colors.purple[1]], 'Dataset Split');
+            createBarChart('mobileClassDistribution', ['Low', 'Medium', 'High', 'Very High'], [349, 354, 352, 345], colors.purple[0], 'Class Distribution Training', '# Phones');
+            createBarChart('mobileModelPerformance', ['Neural Network'], [96], colors.purple[0], 'Model Accuracy Comparison', 'Accuracy (%)');
+            // Create interactive evaluation components for Mobile Pricing
+            createMobilePricingSelector();
+            createMobilePricePredictionChart();
+            selectPriceCategory(mobilePricingLabels[0]);
+            // Fraud Detection
+            createPieChart('fraudDataSplit', ['Training','Validation', 'Test'], [1227908,263123, 263123], [colors.red[0], colors.red[1]], 'Dataset Split');
+            createBarChart('fraudClassDistribution', ['Non-Fraud', 'Fraud'], [1217912, 9996], colors.red[0], 'Class Distribution Training', '# Transactions');
+            createBarChart('fraudModelPerformance', ['Logistic Regression', 'Neural Network'], [97.4, 96.2], colors.red[0], 'Model AUC Comparison', 'AUC (%)');
+            // Create interactive evaluation components for Fraud Detection
+            createFraudDetectionSelector();
+            createFraudDetectionPredictionChart();
+            selectTransactionType(fraudDetectionLabels[0]);
+        }
+        window.onload = initializeCharts;
+    </script>
+</body>
+</html>
